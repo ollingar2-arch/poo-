@@ -1,582 +1,852 @@
-// Importamos la clase Scanner del paquete java.util para poder leer la entrada de datos por consola
+// Importamos la clase Scanner para capturar datos por consola
 import java.util.Scanner;
+// Importamos la clase ArrayList para manejar arreglos dinámicos de objetos
+import java.util.ArrayList;
 
 // =========================================================================
-// 1. CLASE ABSTRACTA PERSONA (Aplicamos Abstracción y Herencia)
+// 0. INTERFAZ PRESTABLE
 // =========================================================================
-// Declaramos la clase Persona como abstracta porque no queremos instanciar personas genéricas,
-// sino únicamente tipos específicos como Usuarios o Bibliotecarios.
+// Definimos la interfaz Prestable que establece un contrato de comportamiento
+interface Prestable {
+    // Método abstracto para prestar un elemento
+    void prestar();
+    // Método abstracto para devolver un elemento
+    void devolver();
+}
+
+// =========================================================================
+// 1. CLASE ABSTRACTA PERSONA (Abstracción y Herencia)
+// =========================================================================
+// Declaramos la clase Persona como abstracta para servir de base a las subclases
 abstract class Persona {
-    // Atributo protegido para almacenar el ID identificador de la persona
+    // Atributo protegido para el ID
     protected int id;
-    // Atributo protegido para el nombre completo de la persona
+    // Atributo protegido para el nombre completo
     protected String nombre;
-    // Atributo protegido para el correo electrónico de contacto
+    // Atributo protegido para el correo de contacto
     protected String correo;
 
-    // Constructor por defecto que inicializa los atributos con valores neutros
+    // Constructor sin parámetros
     public Persona() {
-        // Asignamos 0 como ID por defecto
+        // Inicializamos id en 0 por defecto
         this.id = 0;
-        // Asignamos una cadena genérica para el nombre
+        // Asignamos nombre por defecto
         this.nombre = "Sin nombre";
-        // Asignamos un correo genérico
+        // Asignamos correo genérico por defecto
         this.correo = "sin@correo.com";
     }
 
-    // Constructor con parámetros para inicializar una persona con datos específicos
+    // Constructor parametrizado para recibir los valores base
     public Persona(int id, String nombre, String correo) {
-        // Asignamos el valor del parámetro id al atributo de la clase
+        // Asignamos el id recibido
         this.id = id;
-        // Asignamos el nombre recibido al atributo correspondiente
+        // Asignamos el nombre recibido
         this.nombre = nombre;
-        // Asignamos el correo recibido al atributo correspondiente
+        // Asignamos el correo recibido
         this.correo = correo;
     }
 
-    // Método abstracto obligatorio que obliga a las subclases a definir cómo muestran su información
+    // Método abstracto que obliga a redefinir cómo se muestra la información
     public abstract void mostrarInformacion();
 
-    // Método getter para obtener el ID de la persona
+    // Getter del ID
     public int getId() { return id; }
-    // Método setter para actualizar el ID de la persona
+    // Setter del ID
     public void setId(int id) { this.id = id; }
 
-    // Método getter para obtener el nombre de la persona
+    // Getter del Nombre
     public String getNombre() { return nombre; }
-    // Método setter para actualizar el nombre de la persona
+    // Setter del Nombre
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    // Método getter para obtener el correo de la persona
+    // Getter del Correo
     public String getCorreo() { return correo; }
-    // Método setter para actualizar el correo de la persona
+    // Setter del Correo
     public void setCorreo(String correo) { this.correo = correo; }
 }
 
 // =========================================================================
-// 2. CLASE USUARIO (Hereda de la clase Persona)
+// 2. CLASE USUARIO (Hereda de Persona)
 // =========================================================================
-// La clase Usuario hereda los atributos y métodos públicos/protegidos de Persona
+// Clase concreta Usuario que representa a un alumno o cliente de la biblioteca
 class Usuario extends Persona {
-    // Contador privado que lleva el registro de cuántos libros tiene prestados actualmente
+    // Atributo privado para contar libros prestados activos
     private int librosPrestados;
-    // Cadena privada para almacenar el número telefónico
+    // Atributo privado para guardar el teléfono celular
     private String telefonoCelular;
-    // Bandera booleana para saber si el usuario está activo o suspendido en el sistema
+    // Atributo privado para indicar si el usuario está activo o suspendido
     private boolean activo;
 
-    // Constructor por defecto
+    // Constructor sin parámetros
     public Usuario() {
-        // Llamamos al constructor por defecto de la clase madre (Persona)
+        // Llamada al constructor por defecto de Persona
         super();
-        // Inicializamos el contador de libros prestados en 0
+        // Inicializamos contador de libros prestados en 0
         this.librosPrestados = 0;
-        // Asignamos un teléfono genérico por defecto
+        // Teléfono por defecto
         this.telefonoCelular = "00-00-00-00-00";
-        // Definimos el estado del usuario como activo por defecto
+        // Activo por defecto
         this.activo = true;
     }
 
-    // Primer constructor sobrecargado (recibe id, nombre, correo y estado activo)
+    // Constructor sobrecargado 1
     public Usuario(int id, String nombre, String correo, boolean activo) {
-        // Invocamos al constructor de Persona pasándole id, nombre y correo
+        // Asignamos datos base a super
         super(id, nombre, correo);
-        // Inicializamos el contador de libros prestados en 0
+        // Inicializamos libros prestados en 0
         this.librosPrestados = 0;
-        // Establecemos el teléfono como no registrado
+        // Marcamos teléfono no registrado
         this.telefonoCelular = "No registrado";
-        // Asignamos el valor del estado activo recibido
+        // Asignamos estatus
         this.activo = activo;
     }
 
-    // Segundo constructor sobrecargado (recibe id, nombre, correo, teléfono y estado activo para no chocar firmas)
+    // Constructor sobrecargado 2 (Evita colisión de firmas incluyendo correo y celular)
     public Usuario(int id, String nombre, String correo, String telefonoCelular, boolean activo) {
-        // Enviamos los datos generales a la clase padre mediante super
+        // Asignamos id, nombre y correo a super
         super(id, nombre, correo);
-        // Inicializamos el contador de libros prestados en 0
+        // Inicializamos libros prestados en 0
         this.librosPrestados = 0;
-        // Asignamos el número celular recibido
+        // Asignamos el número celular
         this.telefonoCelular = telefonoCelular;
-        // Asignamos el estado de actividad del usuario
+        // Asignamos estatus de la cuenta
         this.activo = activo;
     }
 
-    // Método para simular la solicitud de un préstamo por parte del usuario
+    // Método para simular la solicitud de un préstamo por el usuario
     public void solicitarPrestamo() {
-        // Verificamos si el usuario se encuentra con estatus activo
+        // Validamos si la cuenta está activa
         if (activo) {
-            // Incrementamos la cantidad de libros que tiene prestados
+            // Aumentamos en 1 la cuenta de libros prestados
             librosPrestados++;
-            // Imprimimos la confirmación en consola indicando la nueva cantidad de préstamos
-            System.out.println("-> El usuario " + nombre + " ha solicitado un préstamo. Libros prestados actualmente: " + librosPrestados);
+            // Imprimimos el resultado en pantalla
+            System.out.println("-> " + nombre + " ha solicitado un préstamo. Libros prestados: " + librosPrestados);
         } else {
-            // Si el usuario no está activo, mostramos un mensaje de restricción
+            // Mensaje de advertencia si la cuenta no está activa
             System.out.println("-> El usuario " + nombre + " no está activo.");
         }
     }
 
-    // Método para simular la devolución de un libro prestado
+    // Método para simular la devolución de un libro por el usuario
     public void devolverLibro() {
-        // Comprobamos si el usuario tiene al menos un libro en su poder
+        // Validamos si el usuario tiene préstamos pendientes
         if (librosPrestados > 0) {
-            // Decrementamos la cuenta de libros prestados
+            // Reducimos en 1 el contador
             librosPrestados--;
-            // Mostramos la confirmación en consola indicando la cantidad restante
-            System.out.println("-> El usuario " + nombre + " devolvió un libro. Libros pendientes: " + librosPrestados);
+            // Mostramos confirmación
+            System.out.println("-> " + nombre + " devolvió un libro. Libros pendientes: " + librosPrestados);
         } else {
-            // Si el contador está en 0, indicamos que no tiene adeudos de libros
-            System.out.println("-> El usuario " + nombre + " no tiene libros pendientes por devolver.");
+            // Avisamos que no debe nada
+            System.out.println("-> " + nombre + " no tiene libros pendientes por devolver.");
         }
     }
 
-    // Sobreescritura del método abstracto declarado en Persona
+    // Redefinición del método de la clase Persona
     @Override
     public void mostrarInformacion() {
-        // Imprimimos todos los datos concatenados del usuario
+        // Imprimimos el estado completo del usuario
         System.out.println("[USUARIO] ID: " + id + " | Nombre: " + nombre + " | Correo: " + correo +
                 " | Teléfono: " + telefonoCelular + " | Activo: " + activo +
                 " | Libros prestados: " + librosPrestados);
     }
 
-    // Getter para consultar la cantidad de libros prestados
+    // Getters y Setters
     public int getLibrosPrestados() { return librosPrestados; }
-    // Getter para consultar el teléfono celular
     public String getTelefonoCelular() { return telefonoCelular; }
-    // Setter para modificar el teléfono celular
     public void setTelefonoCelular(String telefonoCelular) { this.telefonoCelular = telefonoCelular; }
-    // Getter para validar el estatus de la cuenta del usuario
     public boolean isActivo() { return activo; }
-    // Setter para cambiar el estatus de la cuenta del usuario
     public void setActivo(boolean activo) { this.activo = activo; }
 }
 
 // =========================================================================
-// 3. CLASE BIBLIOTECARIO (Hereda de la clase Persona)
+// 3. CLASE BIBLIOTECARIO (Hereda de Persona)
 // =========================================================================
-// La clase Bibliotecario representa al personal encargada de administrar los libros y préstamos
+// Clase que representa a los empleados de la biblioteca
 class Bibliotecario extends Persona {
-    // Atributo privado para indicar si trabaja en el turno matutino o vespertino
+    // Atributo privado para el turno de trabajo
     private String turno;
-    // Atributo privado que guarda el salario asignado al bibliotecario
+    // Atributo privado para el salario
     private double salario;
 
-    // Constructor por defecto
+    // Constructor sin parámetros
     public Bibliotecario() {
-        // Ejecutamos el constructor por defecto de Persona
+        // Llamada a Persona()
         super();
-        // Definimos por defecto el turno matutino
+        // Turno por defecto
         this.turno = "Matutino";
-        // Asignamos un salario base inicial de 0.0
+        // Salario por defecto
         this.salario = 0.0;
     }
 
-    // Constructor parametrizado para registrar un bibliotecario completo
+    // Constructor parametrizado
     public Bibliotecario(int id, String nombre, String correo, String turno, double salario) {
-        // Reutilizamos el constructor de Persona para id, nombre y correo
+        // Enviamos datos a la superclase
         super(id, nombre, correo);
-        // Asignamos el turno de trabajo
+        // Asignamos turno laboral
         this.turno = turno;
-        // Asignamos el salario
+        // Asignamos salario
         this.salario = salario;
     }
 
-    // Método para representar la acción de autorizar un préstamo a un alumno/usuario
+    // Acción para autorizar un préstamo
     public void autorizarPrestamo() {
-        // Mostramos el mensaje en pantalla con el nombre del empleado que autoriza
+        // Imprimimos acción
         System.out.println("-> El bibliotecario " + nombre + " ha autorizado un préstamo.");
     }
 
-    // Método para simular el registro formal de un ejemplar en la base de datos
+    // Acción para registrar un libro
     public void registrarLibro() {
-        // Imprimimos el mensaje indicando qué bibliotecario está haciendo el alta
-        System.out.println("-> El bibliotecario " + nombre + " registró un nuevo libro en el sistema.");
+        // Imprimimos acción
+        System.out.println("-> El bibliotecario " + nombre + " ha registrado un nuevo libro.");
     }
 
-    // Método para simular la baja de un libro deteriorado o perdido
+    // Acción para dar de baja un libro
     public void eliminarLibro() {
-        // Imprimimos la confirmación en consola
-        System.out.println("-> El bibliotecario " + nombre + " eliminó un libro del sistema.");
+        // Imprimimos acción
+        System.out.println("-> El bibliotecario " + nombre + " ha eliminado un libro.");
     }
 
-    // Implementación concreta del método para desplegar la información del bibliotecario
+    // Implementación del método de visualización
     @Override
     public void mostrarInformacion() {
-        // Imprimimos la ficha técnica del bibliotecario
+        // Imprimimos ficha del bibliotecario
         System.out.println("[BIBLIOTECARIO] ID: " + id + " | Nombre: " + nombre + " | Correo: " + correo +
                 " | Turno: " + turno + " | Salario: $" + salario);
     }
 
-    // Getter para el turno
+    // Getters y Setters
     public String getTurno() { return turno; }
-    // Setter para cambiar el turno
     public void setTurno(String turno) { this.turno = turno; }
-    // Getter para el salario
     public double getSalario() { return salario; }
-    // Setter para cambiar el salario
     public void setSalario(double salario) { this.salario = salario; }
 }
 
 // =========================================================================
-// 4. CLASE LIBRO (Encapsulamiento, Sobrecarga y Uso de Atributos Static)
+// 4. CLASE LIBRO (Implementa la Interfaz Prestable)
 // =========================================================================
-// Clase concreta que modela un libro físico dentro del inventario
-class Libro {
-    // Atributo privado para el código estándar internacional ISBN
+// Representa un ejemplar disponible en catálogo e implementa Prestable
+class Libro implements Prestable {
+    // Atributo privado para el ISBN
     private String isbn;
-    // Atributo privado para el título de la obra
+    // Atributo privado para el título
     private String titulo;
-    // Atributo privado para el autor o autores de la obra
+    // Atributo privado para el autor
     private String autor;
-    // Atributo privado para el año de edición/publicación
+    // Atributo privado para el año de edición
     private int anioPublicacion;
-    // Atributo privado para controlar si el libro está libre o ya prestado
+    // Atributo privado para controlar disponibilidad
     private boolean disponible;
 
-    // Variable estática compartida por todos los objetos Libro para contar cuántos se han creado
+    // Atributo estático para contar el total de libros creados
     private static int totalLibros = 0;
 
     // Constructor sin parámetros
     public Libro() {
-        // Asignamos un valor nulo ficticio para el ISBN
+        // ISBN por defecto
         this.isbn = "0000000000";
-        // Asignamos el título genérico
+        // Título por defecto
         this.titulo = "Sin título";
-        // Asignamos un autor por defecto
+        // Autor por defecto
         this.autor = "Anónimo";
-        // Asignamos 0 al año
+        // Año por defecto
         this.anioPublicacion = 0;
-        // Por defecto, el libro recién creado estará disponible
+        // Disponible por defecto
         this.disponible = true;
-        // Incrementamos el contador global estático de libros instanciados
+        // Incrementamos contador global static
         totalLibros++;
     }
 
-    // Primer constructor sobrecargado (recibe solo título y autor)
+    // Constructor sobrecargado 1 (Título y Autor)
     public Libro(String titulo, String autor) {
-        // Asignamos un ISBN por defecto
+        // ISBN por defecto
         this.isbn = "0000000000";
-        // Asignamos el título recibido
+        // Asignamos título
         this.titulo = titulo;
-        // Asignamos el autor recibido
+        // Asignamos autor
         this.autor = autor;
-        // Asignamos el año actual por defecto
+        // Año base 2024
         this.anioPublicacion = 2024;
-        // Marcamos como disponible
+        // Marcamos disponible
         this.disponible = true;
-        // Incrementamos la variable estática contadora
+        // Incrementamos contador global static
         totalLibros++;
     }
 
-    // Segundo constructor sobrecargado (recibe ISBN, título, autor y año de publicación)
+    // Constructor sobrecargado 2 (ISBN, Título, Autor y Año)
     public Libro(String isbn, String titulo, String autor, int anioPublicacion) {
-        // Asignamos el código ISBN recibido
+        // Asignamos ISBN
         this.isbn = isbn;
-        // Asignamos el título recibido
+        // Asignamos título
         this.titulo = titulo;
-        // Asignamos el autor del libro
+        // Asignamos autor
         this.autor = autor;
-        // Asignamos el año de publicación
+        // Asignamos año
         this.anioPublicacion = anioPublicacion;
-        // Establecemos disponibilidad en verdadero
+        // Marcamos disponible
         this.disponible = true;
-        // Sumamos uno al acumulador estático de libros
+        // Incrementamos contador global static
         totalLibros++;
     }
 
-    // Método para verificar la disponibilidad del ejemplar
+    // Consulta si el libro está libre
     public boolean estaDisponible() { return disponible; }
 
-    // Método para marcar que el libro fue prestado
+    // Implementación del método de la interfaz Prestable
+    @Override
     public void prestar() {
-        // Revisamos si el libro está libre para prestarse
+        // Si está disponible lo cambiamos a false
         if (disponible) {
-            // Cambiamos el estado a no disponible
+            // Cambiamos estado
             disponible = false;
-            // Desplegamos el mensaje de préstamo exitoso
+            // Notificamos
             System.out.println("-> El libro '" + titulo + "' ha sido prestado exitosamente.");
         } else {
-            // Avisamos que el libro ya se encuentra ocupado
-            System.out.println("-> El libro '" + titulo + "' ya se encuentra prestado actualmente.");
+            // Si ya estaba prestado avisamos
+            System.out.println("-> El libro '" + titulo + "' no está disponible.");
         }
     }
 
-    // Método para registrar la devolución del libro a la estantería
+    // Implementación del método de la interfaz Prestable
+    @Override
     public void devolver() {
-        // Restauramos el estatus a disponible
+        // Marcamos como disponible
         disponible = true;
-        // Mostramos el mensaje en consola
-        System.out.println("-> El libro '" + titulo + "' ha sido marcado como disponible.");
+        // Notificamos devolución
+        System.out.println("-> El libro '" + titulo + "' se ha devuelto a la estantería.");
     }
 
-    // Getter para ISBN
+    // Getters y Setters
     public String getIsbn() { return isbn; }
-    // Setter para ISBN
     public void setIsbn(String isbn) { this.isbn = isbn; }
-    // Getter para el Título
     public String getTitulo() { return titulo; }
-    // Setter para el Título
     public void setTitulo(String titulo) { this.titulo = titulo; }
-    // Getter para el Autor
     public String getAutor() { return autor; }
-    // Setter para el Autor
     public void setAutor(String autor) { this.autor = autor; }
-    // Getter para el Año de publicación
     public int getAnioPublicacion() { return anioPublicacion; }
-    // Setter para el Año de publicación
     public void setAnioPublicacion(int anioPublicacion) { this.anioPublicacion = anioPublicacion; }
-    // Setter directo para la disponibilidad
     public void setDisponible(boolean disponible) { this.disponible = disponible; }
 
-    // Método estático de clase para consultar el contador global de libros creados
+    // Método estático para consultar la variable de clase static
     public static int getTotalLibros() { return totalLibros; }
 
-    // Método auxiliar para formatear e imprimir la información completa del objeto Libro
+    // Imprime la ficha del libro
     public void mostrarInformacion() {
-        // Imprimimos la ficha técnica con todos sus atributos encapsulados
+        // Mostramos detalles concatenados
         System.out.println("ISBN: " + isbn + " | Título: " + titulo + " | Autor: " + autor +
                 " | Año: " + anioPublicacion + " | Disponible: " + disponible);
     }
 }
 
 // =========================================================================
-// 5. CLASE PRINCIPAL (Punto de Entrada y Menú Consola Interactivo)
+// 5. CLASE PRESTAMO (Composición entre Usuario y Libro)
 // =========================================================================
-// Clase principal ejecutable que debe coincidir con el nombre del archivo Main.java
+// Representa la asociación directa de un préstamo entre un usuario y un libro
+class Prestamo {
+    // Referencia al objeto Usuario que solicita
+    private Usuario usuario;
+    // Referencia al objeto Libro solicitado
+    private Libro libro;
+    // Fecha en la que se realizó el préstamo
+    private String fechaPrestamo;
+    // Fecha compromiso de devolución
+    private String fechaDevolucion;
+    // Estatus para saber si el préstamo está activo
+    private boolean activo;
+
+    // Constructor principal que recibe las referencias de Usuario y Libro
+    public Prestamo(Usuario usuario, Libro libro) {
+        // Asignamos el usuario contenido
+        this.usuario = usuario;
+        // Asignamos el libro contenido
+        this.libro = libro;
+        // Marcamos una fecha genérica de préstamo
+        this.fechaPrestamo = "Hoy";
+        // Marcamos fecha compromiso
+        this.fechaDevolucion = "En 7 días";
+        // Inicializamos activo en falso hasta llamar a iniciarPrestamo()
+        this.activo = false;
+    }
+
+    // Método para activar el préstamo interactuando directamente entre objetos
+    public void iniciarPrestamo() {
+        // Verificamos si el libro está disponible en el inventario
+        if (libro.estaDisponible() && usuario.isActivo()) {
+            // El objeto Prestamo ordena a Libro cambiar a no disponible
+            libro.prestar();
+            // El objeto Prestamo ordena a Usuario registrar el préstamo
+            usuario.solicitarPrestamo();
+            // Activamos la bandera del préstamo
+            this.activo = true;
+            // Confirmamos la transacción
+            System.out.println("-> ¡Préstamo iniciado con éxito para " + usuario.getNombre() + "!");
+        } else {
+            // Notificamos fallo si el libro no estaba libre
+            System.out.println("-> No se pudo iniciar el préstamo. Verifique disponibilidad o estatus del usuario.");
+        }
+    }
+
+    // Método para cerrar la transacción de préstamo
+    public void finalizarPrestamo() {
+        // Comprobamos que esté activo
+        if (activo) {
+            // Notificamos al objeto libro que regrese a la estantería
+            libro.devolver();
+            // Notificamos al objeto usuario que descuente el adeudo
+            usuario.devolverLibro();
+            // Desactivamos este registro de préstamo
+            this.activo = false;
+            // Confirmamos fin
+            System.out.println("-> ¡Préstamo finalizado exitosamente!");
+        } else {
+            // Avisamos que la transacción ya estaba cerrada
+            System.out.println("-> El préstamo ya se encontraba inactivo.");
+        }
+    }
+
+    // Consulta el estado del préstamo
+    public boolean estaActivo() { return activo; }
+
+    // Getters y Setters
+    public Usuario getUsuario() { return usuario; }
+    public Libro getLibro() { return libro; }
+    public String getFechaPrestamo() { return fechaPrestamo; }
+    public String getFechaDevolucion() { return fechaDevolucion; }
+}
+
+// =========================================================================
+// 6. CLASE BIBLIOTECA (Composición y Gestión con ArrayLists)
+// =========================================================================
+// Clase principal que administra todas las colecciones y entidades de la biblioteca
+class Biblioteca {
+    // Lista dinámica de libros almacenados
+    private ArrayList<Libro> libros;
+    // Lista dinámica de usuarios registrados
+    private ArrayList<Usuario> usuarios;
+    // Lista dinámica de empleados bibliotecarios
+    private ArrayList<Bibliotecario> empleados;
+    // Lista dinámica de registros de préstamos
+    private ArrayList<Prestamo> prestamos;
+
+    // Constructor que se encarga de instanciar todas las listas vacías
+    public Biblioteca() {
+        // Instanciamos el ArrayList de libros
+        this.libros = new ArrayList<>();
+        // Instanciamos el ArrayList de usuarios
+        this.usuarios = new ArrayList<>();
+        // Instanciamos el ArrayList de empleados
+        this.empleados = new ArrayList<>();
+        // Instanciamos el ArrayList de préstamos
+        this.prestamos = new ArrayList<>();
+    }
+
+    // --- MÉTODOS DE GESTIÓN DE LIBROS ---
+    // Agrega un objeto Libro a la lista
+    public void agregarLibro(Libro libro) {
+        // Agregamos al ArrayList
+        libros.add(libro);
+        // Notificamos en consola
+        System.out.println("-> Libro '" + libro.getTitulo() + "' agregado a la biblioteca.");
+    }
+
+    // Elimina un libro buscando su ISBN
+    public void eliminarLibro(String isbn) {
+        // Obtenemos la referencia del libro
+        Libro buscado = buscarLibro(isbn);
+        // Si existe en el catálogo lo removemos
+        if (buscado != null) {
+            // Removemos de la lista
+            libros.remove(buscado);
+            // Confirmamos
+            System.out.println("-> Libro con ISBN " + isbn + " eliminado de la biblioteca.");
+        } else {
+            // Notificamos si no existía
+            System.out.println("-> No se encontró ningún libro con el ISBN especificado.");
+        }
+    }
+
+    // Método de búsqueda de libro por ISBN
+    public Libro buscarLibro(String isbn) {
+        // Recorremos la lista de libros con un for-each
+        for (Libro l : libros) {
+            // Si el ISBN coincide ignorando mayúsculas/minúsculas devolvemos la instancia
+            if (l.getIsbn().equalsIgnoreCase(isbn)) {
+                return l;
+            }
+        }
+        // Retornamos null si no se encuentra
+        return null;
+    }
+
+    // SOBRECARGA DE MÉTODOS DE BÚSQUEDA (Punto 9 de la Práctica)
+    // Busca un libro comparando Título y Autor
+    public Libro buscarLibro(String titulo, String autor) {
+        // Recorremos con bucle for-each
+        for (Libro l : libros) {
+            // Comprobamos coincidencia de título y autor
+            if (l.getTitulo().equalsIgnoreCase(titulo) && l.getAutor().equalsIgnoreCase(autor)) {
+                return l;
+            }
+        }
+        // Retornamos null si no hay coincidencia
+        return null;
+    }
+
+    // Muestra todos los libros del catálogo
+    public void mostrarCatalogo() {
+        System.out.println("\n--- CATÁLOGO DE LIBROS ---");
+        // Verificamos si la lista está vacía
+        if (libros.isEmpty()) {
+            System.out.println("El catálogo está vacío.");
+        } else {
+            // Recorremos e imprimimos la información de cada objeto Libro
+            for (Libro l : libros) {
+                l.mostrarInformacion();
+            }
+        }
+    }
+
+    // --- MÉTODOS DE GESTIÓN DE USUARIOS ---
+    // Registra un nuevo usuario en la lista
+    public void registrarUsuario(Usuario usuario) {
+        // Agregamos al ArrayList de usuarios
+        usuarios.add(usuario);
+        // Confirmamos
+        System.out.println("-> Usuario '" + usuario.getNombre() + "' registrado en la biblioteca.");
+    }
+
+    // Busca un usuario mediante su ID
+    public Usuario buscarUsuario(int id) {
+        // Recorremos la lista de usuarios
+        for (Usuario u : usuarios) {
+            // Si el id coincide devolvemos el objeto
+            if (u.getId() == id) {
+                return u;
+            }
+        }
+        // Retornamos null si no lo encuentra
+        return null;
+    }
+
+    // Despliega la lista completa de usuarios
+    public void mostrarUsuarios() {
+        System.out.println("\n--- LISTA DE USUARIOS REGISTRADOS ---");
+        // Validamos si la lista tiene elementos
+        if (usuarios.isEmpty()) {
+            System.out.println("No hay usuarios registrados.");
+        } else {
+            // Recorremos e invocamos mostrarInformacion() en cada usuario
+            for (Usuario u : usuarios) {
+                u.mostrarInformacion();
+            }
+        }
+    }
+
+    // Permite registrar empleados bibliotecarios
+    public void registrarEmpleado(Bibliotecario empleado) {
+        // Agregamos al ArrayList de empleados
+        empleados.add(empleado);
+        // Notificamos registro
+        System.out.println("-> Bibliotecario '" + empleado.getNombre() + "' registrado en el sistema.");
+    }
+
+    // --- MÉTODOS DE GESTIÓN DE PRÉSTAMOS ---
+    // Genera y realiza la transacción de un préstamo
+    public void realizarPrestamo(Usuario usuario, Libro libro) {
+        // Validamos que ambas referencias sean válidas
+        if (usuario != null && libro != null) {
+            // Instanciamos un nuevo objeto Prestamo
+            Prestamo nuevoPrestamo = new Prestamo(usuario, libro);
+            // Iniciamos la colaboración entre objetos
+            nuevoPrestamo.iniciarPrestamo();
+            // Si la transacción se activó, la guardamos en la lista global
+            if (nuevoPrestamo.estaActivo()) {
+                prestamos.add(nuevoPrestamo);
+            }
+        } else {
+            // Notificamos datos inválidos
+            System.out.println("-> No se puede realizar el préstamo: Usuario o Libro no encontrado.");
+        }
+    }
+
+    // Procesa la devolución de un préstamo existente
+    public void devolverLibro(Prestamo prestamo) {
+        // Validamos que el préstamo exista
+        if (prestamo != null && prestamo.estaActivo()) {
+            // Ejecutamos el cierre del préstamo
+            prestamo.finalizarPrestamo();
+        } else {
+            // Avisamos si no es válido
+            System.out.println("-> Registro de préstamo no válido o ya cerrado.");
+        }
+    }
+
+    // Muestra todos los préstamos históricos/activos
+    public void mostrarPrestamos() {
+        System.out.println("\n--- LISTA DE PRÉSTAMOS ---");
+        // Revisamos si existen préstamos registrados
+        if (prestamos.isEmpty()) {
+            System.out.println("No hay préstamos registrados.");
+        } else {
+            // Recorremos e imprimimos detalle de cada préstamo
+            for (int i = 0; i < prestamos.size(); i++) {
+                // Tomamos cada elemento por índice
+                Prestamo p = prestamos.get(i);
+                // Imprimimos la información clave concatenada
+                System.out.println("[" + (i + 1) + "] Usuario: " + p.getUsuario().getNombre() +
+                        " | Libro: " + p.getLibro().getTitulo() +
+                        " | Activo: " + p.estaActivo());
+            }
+        }
+    }
+
+    // Getter para acceder a la lista de préstamos desde el menú
+    public ArrayList<Prestamo> getPrestamos() { return prestamos; }
+}
+
+// =========================================================================
+// 7. CLASE PRINCIPAL MAIN (Menú Interactivo y Ejecución de Casos de Prueba)
+// =========================================================================
 public class Main {
-    // Método principal ejecutable main de Java
+    // Método principal ejecutable main
     public static void main(String[] args) {
-        // Inicializamos la lectura de datos por teclado mediante Scanner
+        // Inicializamos Scanner para captura de datos por consola
         Scanner sc = new Scanner(System.in);
+        // Instanciamos el objeto principal Biblioteca que controlará el sistema completo
+        Biblioteca miBiblioteca = new Biblioteca();
 
-        // Variable para manipular un objeto Libro dentro del flujo interactivo
-        Libro miLibro = null;
-        // Variable para manipular un objeto Usuario
-        Usuario miUsuario = null;
-        // Variable para manipular un objeto Bibliotecario
-        Bibliotecario miBibliotecario = null;
-
-        // Variable para guardar la elección del usuario en el menú
+        // Variable para capturar la opción seleccionada por el usuario
         int opcion = 0;
 
-        // Estructura do-while para repetir el menú hasta que el usuario seleccione la opción de salir
+        // Bucle interactivo principal
         do {
-            // Imprimimos el encabezado del programa
+            // Desplegamos las opciones del menú completo
             System.out.println("\n==============================================");
-            System.out.println("    SISTEMA DE GESTIÓN DE BIBLIOTECA - AVANCE");
+            System.out.println("  SISTEMA DE GESTIÓN DE BIBLIOTECA ");
             System.out.println("==============================================");
-            // Opción 1: Crear libro
-            System.out.println("1. Registrar un Libro");
-            // Opción 2: Crear usuario
-            System.out.println("2. Registrar un Usuario");
-            // Opción 3: Crear bibliotecario
-            System.out.println("3. Registrar un Bibliotecario");
-            // Opción 4: Consultar lo registrado
-            System.out.println("4. Mostrar información general");
-            // Opción 5: Probar métodos de Usuario
-            System.out.println("5. Probar acciones de Usuario (Solicitar/Devolver)");
-            // Opción 6: Probar métodos de Libro
-            System.out.println("6. Probar acciones de Libro (Prestar/Devolver)");
-            // Opción 7: Probar métodos de Bibliotecario
-            System.out.println("7. Probar acciones de Bibliotecario");
-            // Opción 8: Verificar el total estático
-            System.out.println("8. Ver Total de Libros Creados (Atributo Static)");
-            // Opción 9: Terminar la ejecución
-            System.out.println("9. Salir");
-            // Solicitamos la selección
+            System.out.println("1. Registrar un Libro en la Biblioteca");
+            System.out.println("2. Registrar un Usuario en la Biblioteca");
+            System.out.println("3. Registrar un Bibliotecario en el Sistema");
+            System.out.println("4. Mostrar Catálogo de Libros");
+            System.out.println("5. Mostrar Usuarios Registrados");
+            System.out.println("6. Realizar Préstamo de Libro");
+            System.out.println("7. Devolver Libro Prestado");
+            System.out.println("8. Mostrar Lista de Préstamos");
+            System.out.println("9. Buscar Libro por ISBN o (Título y Autor)");
+            System.out.println("10. Ejecutar Casos de Prueba ");
+            System.out.println("11. Ver Total de Libros creados ");
+            System.out.println("12. Salir");
             System.out.print("Selecciona una opción: ");
 
-            // Validamos que la entrada leída por teclado sea un número entero válido
+            // Validamos que se ingrese un entero válido
             if (sc.hasNextInt()) {
                 // Leemos la opción elegida
                 opcion = sc.nextInt();
-                // Limpiamos el salto de línea sobrante del buffer del Scanner
+                // Limpiamos el buffer del Scanner
                 sc.nextLine();
             } else {
-                // Notificamos el error si el usuario no teclea un número
-                System.out.println("Por favor ingresa un número válido.");
-                // Limpiamos el texto inválido del buffer
+                // Advertimos sobre entrada inválida
+                System.out.println("Por favor ingresa un número entero.");
+                // Limpiamos buffer de entrada
                 sc.nextLine();
-                // Saltamos a la siguiente iteración del ciclo
+                // Saltamos a la siguiente interacción del ciclo
                 continue;
             }
 
-            // Estructura de selección múltiple switch para redirigir la acción seleccionada
+            // Evaluamos la opción seleccionada mediante un switch
             switch (opcion) {
-                // Caso para el alta de un libro
+                // Registro interactivo de un nuevo Libro
                 case 1:
-                    System.out.println("\n--- REGISTRO DE LIBRO ---");
-                    // Pedimos el ISBN
-                    System.out.print("Ingresa el ISBN: ");
+                    System.out.println("\n--- REGISTRAR NUEVO LIBRO ---");
+                    System.out.print("Ingresa ISBN: ");
                     String isbn = sc.nextLine();
-                    // Pedimos el Título
-                    System.out.print("Ingresa el Título: ");
+                    System.out.print("Ingresa Título: ");
                     String titulo = sc.nextLine();
-                    // Pedimos el Autor
-                    System.out.print("Ingresa el Autor: ");
+                    System.out.print("Ingresa Autor: ");
                     String autor = sc.nextLine();
-                    // Pedimos el Año de publicación
-                    System.out.print("Ingresa el Año de Publicación: ");
+                    System.out.print("Ingresa Año de Publicación: ");
                     int anio = sc.nextInt();
-                    // Limpiamos el buffer tras leer un número
                     sc.nextLine();
 
-                    // Instanciamos el nuevo libro pasando todos sus argumentos al constructor
-                    miLibro = new Libro(isbn, titulo, autor, anio);
-                    // Avisamos que la creación fue exitosa
-                    System.out.println("¡Libro registrado correctamente!");
+                    // Instanciamos el objeto Libro y lo agregamos a la biblioteca
+                    Libro nuevoLibro = new Libro(isbn, titulo, autor, anio);
+                    miBiblioteca.agregarLibro(nuevoLibro);
                     break;
 
-                // Caso para el alta de un usuario
+                // Registro interactivo de un nuevo Usuario
                 case 2:
-                    System.out.println("\n--- REGISTRO DE USUARIO ---");
-                    // Pedimos la matrícula o ID
-                    System.out.print("Ingresa el ID del usuario: ");
+                    System.out.println("\n--- REGISTRAR NUEVO USUARIO ---");
+                    System.out.print("Ingresa ID del Usuario: ");
                     int idU = sc.nextInt();
-                    // Limpiamos buffer
                     sc.nextLine();
-                    // Pedimos el nombre del alumno o usuario
-                    System.out.print("Ingresa el Nombre: ");
+                    System.out.print("Ingresa Nombre: ");
                     String nomU = sc.nextLine();
-                    // Pedimos el correo institucional/personal
-                    System.out.print("Ingresa el Correo: ");
+                    System.out.print("Ingresa Correo: ");
                     String correoU = sc.nextLine();
-                    // Pedimos el número de contacto celular
-                    System.out.print("Ingresa el Teléfono Celular: ");
+                    System.out.print("Ingresa Celular: ");
                     String telU = sc.nextLine();
 
-                    // Instanciamos el objeto Usuario con el constructor completo que no colisiona
-                    miUsuario = new Usuario(idU, nomU, correoU, telU, true);
-                    // Mostramos la confirmación
-                    System.out.println("¡Usuario registrado correctamente!");
+                    // Instanciamos el objeto Usuario y lo agregamos a la biblioteca
+                    Usuario nuevoUsuario = new Usuario(idU, nomU, correoU, telU, true);
+                    miBiblioteca.registrarUsuario(nuevoUsuario);
                     break;
 
-                // Caso para el alta de un bibliotecario
+                // Registro interactivo de un Bibliotecario
                 case 3:
-                    System.out.println("\n--- REGISTRO DE BIBLIOTECARIO ---");
-                    // Pedimos el número de empleado / ID
-                    System.out.print("Ingresa el ID del bibliotecario: ");
+                    System.out.println("\n--- REGISTRAR BIBLIOTECARIO ---");
+                    System.out.print("Ingresa ID: ");
                     int idB = sc.nextInt();
-                    // Limpiamos buffer
                     sc.nextLine();
-                    // Pedimos nombre completo
-                    System.out.print("Ingresa el Nombre: ");
+                    System.out.print("Ingresa Nombre: ");
                     String nomB = sc.nextLine();
-                    // Pedimos correo
-                    System.out.print("Ingresa el Correo: ");
+                    System.out.print("Ingresa Correo: ");
                     String correoB = sc.nextLine();
-                    // Pedimos el turno laboral
-                    System.out.print("Ingresa el Turno (Matutino/Vespertino): ");
+                    System.out.print("Ingresa Turno (Matutino/Vespertino): ");
                     String turnoB = sc.nextLine();
-                    // Pedimos el sueldo
-                    System.out.print("Ingresa el Salario: ");
+                    System.out.print("Ingresa Salario: ");
                     double salarioB = sc.nextDouble();
-                    // Limpiamos buffer
                     sc.nextLine();
 
-                    // Creamos la instancia de la clase Bibliotecario
-                    miBibliotecario = new Bibliotecario(idB, nomB, correoB, turnoB, salarioB);
-                    // Mostramos confirmación
-                    System.out.println("¡Bibliotecario registrado correctamente!");
+                    // Instanciamos el bibliotecario y lo registramos en el sistema
+                    Bibliotecario nuevoEmpleado = new Bibliotecario(idB, nomB, correoB, turnoB, salarioB);
+                    miBiblioteca.registrarEmpleado(nuevoEmpleado);
                     break;
 
-                // Caso para imprimir las propiedades registradas
+                // Consulta de la lista de libros
                 case 4:
-                    System.out.println("\n--- INFORMACIÓN DE ENTIDADES ---");
-                    // Si el objeto libro ya fue creado, llamamos a su método
-                    if (miLibro != null) miLibro.mostrarInformacion();
-                    else System.out.println("No hay ningún libro registrado.");
-
-                    // Si el usuario existe, mostramos sus datos
-                    if (miUsuario != null) miUsuario.mostrarInformacion();
-                    else System.out.println("No hay ningún usuario registrado.");
-
-                    // Si el bibliotecario existe, mostramos sus datos
-                    if (miBibliotecario != null) miBibliotecario.mostrarInformacion();
-                    else System.out.println("No hay ningún bibliotecario registrado.");
+                    miBiblioteca.mostrarCatalogo();
                     break;
 
-                // Caso para interactuar con las acciones del usuario
+                // Consulta de la lista de usuarios
                 case 5:
-                    // Verificamos que exista el usuario antes de invocar métodos
-                    if (miUsuario == null) {
-                        System.out.println("Primero debes registrar un usuario (Opción 2).");
-                    } else {
-                        // Submenú numérico
-                        System.out.println("\n1. Solicitar Préstamo");
-                        System.out.println("2. Devolver Libro");
-                        System.out.print("Elige una opción: ");
-                        int opU = sc.nextInt();
-                        sc.nextLine();
-                        // Ejecutamos la solicitud
-                        if (opU == 1) miUsuario.solicitarPrestamo();
-                            // Ejecutamos la devolución
-                        else if (opU == 2) miUsuario.devolverLibro();
-                        else System.out.println("Opción inválida.");
-                    }
+                    miBiblioteca.mostrarUsuarios();
                     break;
 
-                // Caso para modificar directamente el estado de un objeto Libro
+                // Realizar un préstamo dinámico
                 case 6:
-                    // Verificamos que exista el libro
-                    if (miLibro == null) {
-                        System.out.println("Primero debes registrar un libro (Opción 1).");
-                    } else {
-                        // Submenú numérico
-                        System.out.println("\n1. Prestar Libro");
-                        System.out.println("2. Devolver Libro");
-                        System.out.print("Elige una opción: ");
-                        int opL = sc.nextInt();
-                        sc.nextLine();
-                        // Llamamos al método prestar
-                        if (opL == 1) miLibro.prestar();
-                            // Llamamos al método devolver
-                        else if (opL == 2) miLibro.devolver();
-                        else System.out.println("Opción inválida.");
-                    }
+                    System.out.println("\n--- REALIZAR PRÉSTAMO ---");
+                    System.out.print("Ingresa el ID del Usuario: ");
+                    int idBusqueda = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Ingresa el ISBN del Libro: ");
+                    String isbnBusqueda = sc.nextLine();
+
+                    // Buscamos las referencias de los objetos en las listas de la biblioteca
+                    Usuario uPrestamo = miBiblioteca.buscarUsuario(idBusqueda);
+                    Libro lPrestamo = miBiblioteca.buscarLibro(isbnBusqueda);
+
+                    // Ejecutamos el préstamo en la biblioteca
+                    miBiblioteca.realizarPrestamo(uPrestamo, lPrestamo);
                     break;
 
-                // Caso para ejecutar comportamientos propios del personal bibliotecario
+                // Devolver un libro dinámicamente
                 case 7:
-                    // Verificamos que exista el empleado bibliotecario
-                    if (miBibliotecario == null) {
-                        System.out.println("Primero debes registrar un bibliotecario (Opción 3).");
-                    } else {
-                        // Submenú de operaciones
-                        System.out.println("\n1. Registrar Libro en sistema");
-                        System.out.println("2. Autorizar Préstamo");
-                        System.out.println("3. Eliminar Libro de sistema");
-                        System.out.print("Elige una opción: ");
-                        int opB = sc.nextInt();
+                    System.out.println("\n--- DEVOLVER LIBRO ---");
+                    // Mostramos la lista de préstamos activos
+                    miBiblioteca.mostrarPrestamos();
+                    // Si hay préstamos en la lista, solicitamos el número
+                    if (!miBiblioteca.getPrestamos().isEmpty()) {
+                        System.out.print("Ingresa el número de préstamo a devolver: ");
+                        int numP = sc.nextInt();
                         sc.nextLine();
-                        // Ejecutamos el registro simulado
-                        if (opB == 1) miBibliotecario.registrarLibro();
-                            // Autorizamos préstamo
-                        else if (opB == 2) miBibliotecario.autorizarPrestamo();
-                            // Eliminamos del catálogo
-                        else if (opB == 3) miBibliotecario.eliminarLibro();
-                        else System.out.println("Opción inválida.");
+                        // Ajustamos a índice base 0 y procesamos la devolución
+                        if (numP > 0 && numP <= miBiblioteca.getPrestamos().size()) {
+                            Prestamo pDevolucion = miBiblioteca.getPrestamos().get(numP - 1);
+                            miBiblioteca.devolverLibro(pDevolucion);
+                        } else {
+                            System.out.println("Número de préstamo inválido.");
+                        }
                     }
                     break;
 
-                // Caso para revisar el funcionamiento de la variable estática static
+                // Consulta la lista de todos los préstamos en el sistema
                 case 8:
-                    // Invocamos el método estático directamente a través del nombre de la clase Libro
-                    System.out.println("\nTotal de objetos 'Libro' instanciados: " + Libro.getTotalLibros());
+                    miBiblioteca.mostrarPrestamos();
                     break;
 
-                // Opción para salir
+                // Probar la búsqueda sobrecargada de libros
                 case 9:
-                    System.out.println("Saliendo del programa...");
+                    System.out.println("\n--- BÚSQUEDA SOBRECARGADA DE LIBROS ---");
+                    System.out.println("1. Buscar por ISBN");
+                    System.out.println("2. Buscar por Título y Autor");
+                    System.out.print("Elige una opción: ");
+                    int opBusqueda = sc.nextInt();
+                    sc.nextLine();
+
+                    if (opBusqueda == 1) {
+                        System.out.print("Ingresa ISBN: ");
+                        String busqIsbn = sc.nextLine();
+                        Libro resultado = miBiblioteca.buscarLibro(busqIsbn);
+                        if (resultado != null) resultado.mostrarInformacion();
+                        else System.out.println("Libro no encontrado.");
+                    } else if (opBusqueda == 2) {
+                        System.out.print("Ingresa Título: ");
+                        String busqTitulo = sc.nextLine();
+                        System.out.print("Ingresa Autor: ");
+                        String busqAutor = sc.nextLine();
+                        // Ejecución de la sobrecarga de búsqueda en Biblioteca
+                        Libro resultado = miBiblioteca.buscarLibro(busqTitulo, busqAutor);
+                        if (resultado != null) resultado.mostrarInformacion();
+                        else System.out.println("Libro no encontrado.");
+                    } else {
+                        System.out.println("Opción inválida.");
+                    }
                     break;
 
-                // Captura de opción fuera de rango del menú
+                // Ejecución automática de los Casos de Prueba estipulados en las Secciones 11.1 a 11.4
+                case 10:
+                    System.out.println("\n================================================");
+                    System.out.println(" EJECUTANDO CASOS DE PRUEBA DE LA PRACTICA");
+                    System.out.println("================================================");
+
+                    // Caso 1: Registro de 3 Libros
+                    System.out.println("\n>>> CASO 1: Registro de Libros");
+                    Libro lib1 = new Libro("111", "Java Básico", "Herbert Schildt", 2018);
+                    Libro lib2 = new Libro("222", "Clean Code", "Robert C. Martin", 2008);
+                    Libro lib3 = new Libro("333", "Patrones de Diseño", "Erich Gamma", 1994);
+                    miBiblioteca.agregarLibro(lib1);
+                    miBiblioteca.agregarLibro(lib2);
+                    miBiblioteca.agregarLibro(lib3);
+
+                    // Caso 2: Registro de 2 Usuarios
+                    System.out.println("\n>>> CASO 2: Registro de Usuarios");
+                    Usuario us1 = new Usuario(1, "Juan Pérez", "juan@mail.com", true);
+                    Usuario us2 = new Usuario(2, "María Gómez", "maria@mail.com", true);
+                    miBiblioteca.registrarUsuario(us1);
+                    miBiblioteca.registrarUsuario(us2);
+
+                    // Caso 3: Solicitud de Préstamo
+                    System.out.println("\n>>> CASO 3: Solicitud de Préstamo (Juan solicita 'Clean Code')");
+                    System.out.println("Estado inicial 'Clean Code' disponible = " + lib2.estaDisponible());
+                    miBiblioteca.realizarPrestamo(us1, lib2);
+                    System.out.println("Resultado esperado -> Libro disponible: " + lib2.estaDisponible());
+
+                    // Caso 4: Devolución de Libro
+                    System.out.println("\n>>> CASO 4: Devolución de Libro (Juan devuelve 'Clean Code')");
+                    if (!miBiblioteca.getPrestamos().isEmpty()) {
+                        Prestamo pPrueba = miBiblioteca.getPrestamos().get(miBiblioteca.getPrestamos().size() - 1);
+                        miBiblioteca.devolverLibro(pPrueba);
+                    }
+                    System.out.println("Resultado esperado -> Libro disponible: " + lib2.estaDisponible());
+                    break;
+
+                // Consultar el total de la variable estática static
+                case 11:
+                    System.out.println("\nTotal de libros creados en memoria (Atributo Static): " + Libro.getTotalLibros());
+                    break;
+
+                // Salida del programa
+                case 12:
+                    System.out.println("Saliendo del programa de gestión...");
+                    break;
+
+                // Captura de opciones inválidas
                 default:
                     System.out.println("Opción no válida. Intenta de nuevo.");
             }
-            // Condición para mantener la ejecución viva mientras no sea la opción 9
-        } while (opcion != 9);
+            // Condición de permanencia en la ejecución
+        } while (opcion != 12);
 
-        // Cerramos la lectura del Scanner para liberar recursos
+        // Cerramos el objeto Scanner para liberar la consola
         sc.close();
     }
 }
